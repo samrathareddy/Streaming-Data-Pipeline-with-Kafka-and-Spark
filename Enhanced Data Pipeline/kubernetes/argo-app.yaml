@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: end-to-end-pipeline
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: "git@github.com:yourrepo/end-to-end-pipeline.git"
+    targetRevision: main
+    path: kubernetes
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

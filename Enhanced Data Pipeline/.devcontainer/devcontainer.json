@@ -1,0 +1,20 @@
+{
+  "name": "End-to-End Data Pipeline Dev Container",
+  "dockerComposeFile": [
+    "../docker-compose.yaml"
+  ],
+  "service": "airflow-webserver",
+  "workspaceFolder": "/workspace",
+  "shutdownAction": "stopCompose",
+  "settings": {
+    "terminal.integrated.shell.linux": "/bin/bash",
+    "python.pythonPath": "/usr/local/bin/python"
+  },
+  "extensions": [
+    "ms-python.python",
+    "ms-azuretools.vscode-docker",
+    "eamodio.gitlens"
+  ],
+  "postCreateCommand": "pip install --upgrade pip && pip install -r airflow/requirements.txt",
+  "remoteUser": "airflow"
+}

@@ -1,0 +1,110 @@
+name: CI/CD Pipeline for End-to-End Data Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  # ---------------------------
+  # STEP 1: LINT & TEST
+  # ---------------------------
+  lint-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🛠 Checkout Code
+        uses: actions/checkout@v3
+
+      - name: 🛠 Set Up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
+      - name: 📦 Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: ✅ Run Linter (Flake8)
+        run: |
+          pip install flake8
+          flake8 .
+
+      - name: ✅ Run Tests (Pytest)
+        run: |
+          pip install pytest
+          pytest tests/
+
+  # ---------------------------
+  # STEP 2: BUILD DOCKER IMAGES
+  # ---------------------------
+  build:
+    needs: lint-test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🛠 Checkout Code
+        uses: actions/checkout@v3
+
+      - name: 🔧 Set Up Docker
+        run: |
+          sudo apt-get update
+          sudo apt-get install docker-compose
+
+      - name: 🔨 Build Docker Images
+        run: |
+          docker-compose build
+
+      - name: 🏗️ Push Docker Images to Docker Hub
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: |
+          echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+          docker-compose push
+
+  # ---------------------------
+  # STEP 3: DEPLOY TO SERVER
+  # ---------------------------
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🚀 Deploy Using Docker Compose
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /opt/end-to-end-pipeline
+            git pull origin main
+            docker-compose down
+            docker-compose up -d
+
+  # ---------------------------
+  # STEP 4: MONITORING & ALERTS
+  # ---------------------------
+  monitoring:
+    needs: deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🚨 Health Check
+        run: |
+          curl -f http://localhost:8080 || exit 1
+          curl -f http://localhost:9090 || exit 1
+          curl -f http://localhost:3000 || exit 1
+
+      - name: 📩 Send Deployment Notification
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_MESSAGE: "✅ CI/CD Pipeline: Deployment Successful!"

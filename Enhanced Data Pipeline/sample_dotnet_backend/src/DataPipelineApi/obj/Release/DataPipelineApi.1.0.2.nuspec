@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>DataPipelineApi</id>
+    <version>1.0.2</version>
+    <authors>DataPipelineApi</authors>
+    <description>Package Description</description>
+    <dependencies>
+      <group targetFramework="net6.0">
+        <dependency id="AWSSDK.S3" version="3.7.1.8" exclude="Build,Analyzers" />
+        <dependency id="Confluent.Kafka" version="2.2.0" exclude="Build,Analyzers" />
+        <dependency id="Dapper" version="2.0.123" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.AspNetCore.Mvc.NewtonsoftJson" version="6.0.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Http.Polly" version="6.0.0" exclude="Build,Analyzers" />
+        <dependency id="MySqlConnector" version="2.3.0" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json" version="13.0.1" exclude="Build,Analyzers" />
+        <dependency id="Npgsql" version="7.0.4" exclude="Build,Analyzers" />
+        <dependency id="Polly.Extensions.Http" version="3.0.0" exclude="Build,Analyzers" />
+        <dependency id="Swashbuckle.AspNetCore" version="6.4.0" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+    <frameworkReferences>
+      <group targetFramework="net6.0">
+        <frameworkReference name="Microsoft.AspNetCore.App" />
+      </group>
+    </frameworkReferences>
+  </metadata>
+  <files>
+    <file src="/app/bin/Release/net6.0/DataPipelineApi.runtimeconfig.json" target="lib/net6.0/DataPipelineApi.runtimeconfig.json" />
+    <file src="/app/bin/Release/net6.0/DataPipelineApi.dll" target="lib/net6.0/DataPipelineApi.dll" />
+  </files>
+</package>

@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: end-to-end-pipeline
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: pipeline
+  template:
+    metadata:
+      labels:
+        app: pipeline
+    spec:
+      containers:
+        - name: airflow
+          image: myrepo/airflow-pipeline:latest
+          ports:
+            - containerPort: 8080
+
+        - name: kafka
+          image: myrepo/kafka-pipeline:latest
+          ports:
+            - containerPort: 9092
+
+        - name: spark
+          image: myrepo/spark-pipeline:latest
+          ports:
+            - containerPort: 4040
+
+        - name: mongodb
+          image: mongo:latest
+          ports:
+            - containerPort: 27017
+
+        - name: hadoop
+          image: myrepo/hadoop-pipeline:latest
+          ports:
+            - containerPort: 50070
+
+        - name: influxdb
+          image: influxdb:latest
+          ports:
+            - containerPort: 8086

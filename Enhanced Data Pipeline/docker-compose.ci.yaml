@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  airflow:
+    image: myrepo/airflow-pipeline:latest
+    build:
+      context: ./airflow
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+
+  kafka:
+    image: myrepo/kafka-pipeline:latest
+    build:
+      context: ./kafka
+    restart: always
+    ports:
+      - "9092:9092"
+
+  spark:
+    image: myrepo/spark-pipeline:latest
+    build:
+      context: ./spark
+    restart: always
+    ports:
+      - "4040:4040"
+
+  mongodb:
+    image: mongo:latest
+    restart: always
+    ports:
+      - "27017:27017"
+
+  hadoop:
+    image: myrepo/hadoop-pipeline:latest
+    build:
+      context: ./hadoop
+    restart: always
+    ports:
+      - "50070:50070"
+
+  influxdb:
+    image: influxdb:latest
+    restart: always
+    ports:
+      - "8086:8086"
