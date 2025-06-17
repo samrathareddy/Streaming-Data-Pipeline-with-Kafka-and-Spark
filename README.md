@@ -1,4 +1,4 @@
-# 🚀 Enhanced Data Pipeline – by Samratha Reddy
+# 🚀 Streaming Data Pipeline with Kafka and Spark – by Samratha Reddy
 
 This is a **production-grade, personalized data pipeline project** built by **Samratha Reddy** for professional showcase and deployment. It has been customized to suit real-world scenarios in **batch and streaming data processing**, leveraging modern tools such as **Apache Spark, Kafka, Airflow, PostgreSQL, MinIO**, and more.
 
